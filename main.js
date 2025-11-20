@@ -28,7 +28,7 @@ let paddlespeed = 8;
 
 //falling object
 // falling object
-let objectx = Math.random() * gi.width;
+let objectx = 0;
 let objecty = 0;
 let objectspeed = 25;
 let objectradius = 5;
@@ -50,6 +50,9 @@ gi.addDrawing(function drawpaddle({ ctx, width, height, elapsed, stepTime }) {
     Paddley = height - paddleheight - 10;
     paddlex = (width - paddlewidth) / 2;
     paddleSizeSet = true;
+    //again teacher helped me with this part
+    objectx = Math.random() * width;
+
   }
   // Your drawing code here...
   ctx.fillStyle = "blue";
@@ -57,10 +60,7 @@ gi.addDrawing(function drawpaddle({ ctx, width, height, elapsed, stepTime }) {
 });
 
 gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
-//was ai I didnt write if (!isFinite(objectx) || isNaN(objectx)) { it was helping me fix a bug where the ball would continuously randomize its position
-  if (!isFinite(objectx) || isNaN(objectx)) {
-    objectx = Math.random() * width;
-  }
+
   ctx.fillStyle = "green";
   ctx.beginPath();
   ctx.arc(objectx, objecty, objectradius, 0, Math.PI * 2);
