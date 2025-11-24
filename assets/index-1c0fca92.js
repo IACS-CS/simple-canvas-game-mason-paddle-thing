@@ -990,12 +990,13 @@ let Paddley = gi.height + 30; // fixed hieght
 //are subject to change as needed these are just arbitary numbers
 let paddlewidth = 80;
 let paddleheight = 10;
+let paddlevelocity = 0;
+let paddleacceleration = 2;
 
-//falling object
 // falling object
 let objectx = 0;
 let objecty = 0;
-let objectspeed = 25;
+let objectspeed = 50;
 let objectradius = 5;
 
 /* Drawing Functions */
@@ -1017,26 +1018,45 @@ gi.addDrawing(function drawpaddle({ ctx, width, height, elapsed, stepTime }) {
     paddleSizeSet = true;
     //again teacher helped me with this part
     objectx = Math.random() * width;
-
+    // add velocity to paddle and movemnet left and right based on keys
   }
   // Your drawing code here...
   ctx.fillStyle = "blue";
   ctx.fillRect(paddlex, Paddley, paddlewidth, paddleheight);
+  //AI helped me with this part as well
+  // Apply paddle velocity to position each frame, with simple friction and bounds
+  // scale velocity by frame time so movement is framerate independent
+  paddlex += paddlevelocity * (stepTime / 16);
+  // apply simple friction so velocity decays over time
+  paddlevelocity *= 0.98;
+  // clamp paddle to canvas bounds
+  if (paddlex < 0) {
+    paddlex = 0;
+    paddlevelocity = 0;
+  } else if (paddlex + paddlewidth > width) {
+    paddlex = width - paddlewidth;
+    paddlevelocity = 0;
+  }
 });
 
 gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
-
   ctx.fillStyle = "green";
   ctx.beginPath();
   ctx.arc(objectx, objecty, objectradius, 0, Math.PI * 2);
   ctx.fill();
   //update object position
   objecty += objectspeed * (stepTime / 1000);
-  //reset object if it goes off screen
+  //check if object fell off screen
   if (objecty > height) {
-    objecty = 0;
-    objectx = Math.random() * width;
+    // Game over and relode page to restart
+    gi.stop();
+    gi.dialog("Game Over!", "The ball fell off the screen!", () => { 
+      //auto complete did this 
+      location.reload();
+    });
   }
+  // gravity effect I think
+  objectspeed += 10 * (stepTime / 1000);
 });
 
 /* Input Handlers */
@@ -1045,9 +1065,29 @@ gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
 any type of event -- keydown, mousemove, etc) */
 
 gi.addHandler("click", function ({ event, x, y }) {
-  // Your click handling code here...
+  // Use the canvas-local `x` provided by the handler (not event.clientX)
+  // and push the paddle by changing its velocity. This makes control
+  // intentionally a bit 'slippery' because we add velocity instead of
+  // setting position directly.
+  if (x < paddlex + paddlewidth / 2) {
+    // move left
+    paddlevelocity -= paddleacceleration;
+  } else {
+    // move right
+    paddlevelocity += paddleacceleration;
+  }
+});
+//got help from teacher on this part as well
+gi.addHandler("keydown", function ({ event }) {
+  if (event.key === "ArrowLeft") {
+    // move left
+    paddlevelocity -= paddleacceleration;
+  } else if (event.key === "ArrowRight") {
+    // move right
+    paddlevelocity += paddleacceleration;
+  }
 });
 
 /* Run the game */
 gi.run();
-//# sourceMappingURL=index-10b42852.js.map
+//# sourceMappingURL=index-1c0fca92.js.map
