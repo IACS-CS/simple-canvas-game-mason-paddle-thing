@@ -982,6 +982,21 @@ class T extends p {
 
 let gi = new T();
 
+// make a topbar that has the name of the game and a button with instructions
+//used teachers template for this
+let topbar = gi.addTopBar();
+topbar.addTitle("Paddle Smacker");
+topbar.addButton({
+  text: "Instructions",
+  // The simple-canvas-library expects `onclick` (lowercase).
+  // Code generated with the help of GitHub Copilot in this session.
+  onclick: function () {
+    gi.dialog(
+      "Instructions",
+      "Use the left and right arrow keys or click(you need to click once before you can use the arrow keys) on the left/right side of the screen to move the paddle. Smack the falling ball with the paddle to score points. If the ball falls off the bottom of the screen, the game is over."
+    );
+  },
+});
 /* Variables: Top-Level variables defined here are used to hold game state */
 //Paddle
 let paddleSizeSet = false;
@@ -997,18 +1012,18 @@ let paddleacceleration = 2;
 let objectx = 0;
 let objecty = 0;
 let objectspeed = 50;
-let objectradius = 5;
+let objectradius = 7;
 
 //scoreboard
 let score = 0;
 
 /* Drawing Functions */
 
-/* Example drawing function: you can add multiple drawing functions
-that will be called in sequence each frame. It's a good idea to do 
-one function per each object you are putting on screen, and you
-may then want to break your drawing function down into sub-functions
-to make it easier to read/follow */
+/* Example drawing function: you can add multiple drawing functions */
+/*that will be called in sequence each frame. It's a good idea to do */
+/*one function per each object you are putting on screen, and you */
+/*may then want to break your drawing function down into sub-functions */
+/* to make it easier to read/follow */
 gi.addDrawing(function drawpaddle({ ctx, width, height, elapsed, stepTime }) {
   //got helpt from teacher will put in citation later
   if (!paddleSizeSet) {
@@ -1042,9 +1057,9 @@ gi.addDrawing(function drawpaddle({ ctx, width, height, elapsed, stepTime }) {
   }
 });
 
-/* DRAW BALL + COLLISION + SCORE */
+// DRAW BALL + COLLISION + SCORE
 gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
-  ctx.fillStyle = "green";
+  ctx.fillStyle = "purple";
   ctx.beginPath();
   ctx.arc(objectx, objecty, objectradius, 0, Math.PI * 2);
   ctx.fill();
@@ -1052,7 +1067,7 @@ gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
   // Update object falling
   objecty += objectspeed * (stepTime / 1000);
   objectspeed += 10 * (stepTime / 1000);
-//AI helped me with this part as well
+  //AI helped me with this part as well
   // Collision Detection
   let hitPaddle =
     objecty + objectradius >= Paddley &&
@@ -1067,10 +1082,11 @@ gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
     // Reset ball to random top position
     objectx = Math.random() * width;
     objecty = 0;
-    objectspeed += 10; // increase speed for difficulty
+    objectspeed += 7.5; // increase speed for difficulty
   }
 
   // If ball falls off screen → game over
+  //AI told me gi.diioalog is a thing and to use location.reload to restart
   if (objecty > height) {
     gi.stop();
     gi.dialog("Game Over!", "The ball fell off the screen!", () => {
@@ -1078,18 +1094,18 @@ gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
     });
   }
 });
-//idk how but auto fill did this 
-/* DRAW SCORE */
+//idk how but auto fill did this
+// DRAW SCORE
 gi.addDrawing(function drawScore({ ctx }) {
   ctx.fillStyle = "white";
   ctx.font = "20px Arial";
   ctx.fillText("Score: " + score, 10, 30);
 });
 
-/* Input Handlers */
+// Input Handlers
 
-/* Example: Mouse click handler (you can change to handle 
-any type of event -- keydown, mousemove, etc) */
+// Example: Mouse click handler (you can change to handle
+//any type of event -- keydown, mousemove, etc)
 
 gi.addHandler("click", function ({ event, x, y }) {
   // Use the canvas-local `x` provided by the handler (not event.clientX)
@@ -1115,6 +1131,6 @@ gi.addHandler("keydown", function ({ event }) {
   }
 });
 
-/* Run the game */
+// Run the game
 gi.run();
-//# sourceMappingURL=index-339c702a.js.map
+//# sourceMappingURL=index-136ae5a5.js.map
