@@ -36,6 +36,9 @@ let objectradius = 5;
 // game state
 let gameOver = false;
 
+//scoreboard
+let score = 0;
+
 /* Drawing Functions */
 
 /* Example drawing function: you can add multiple drawing functions
@@ -76,24 +79,48 @@ gi.addDrawing(function drawpaddle({ ctx, width, height, elapsed, stepTime }) {
   }
 });
 
+/* DRAW BALL + COLLISION + SCORE */
 gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
   ctx.fillStyle = "green";
   ctx.beginPath();
   ctx.arc(objectx, objecty, objectradius, 0, Math.PI * 2);
   ctx.fill();
-  //update object position
+
+  // Update object falling
   objecty += objectspeed * (stepTime / 1000);
-  //check if object fell off screen
+  objectspeed += 10 * (stepTime / 1000);
+//AI helped me with this part as well
+  // Collision Detection
+  let hitPaddle =
+    objecty + objectradius >= Paddley &&
+    objecty - objectradius <= Paddley + paddleheight &&
+    objectx >= paddlex &&
+    objectx <= paddlex + paddlewidth;
+
+  if (hitPaddle) {
+    // Increase score
+    score++;
+
+    // Reset ball to random top position
+    objectx = Math.random() * width;
+    objecty = 0;
+    objectspeed += 10; // increase speed for difficulty
+  }
+
+  // If ball falls off screen → game over
   if (objecty > height) {
-    // Game over and relode page to restart
     gi.stop();
-    gi.dialog("Game Over!", "The ball fell off the screen!", () => { 
-      //auto complete did this 
+    gi.dialog("Game Over!", "The ball fell off the screen!", () => {
       location.reload();
     });
   }
-  // gravity effect I think
-  objectspeed += 10 * (stepTime / 1000);
+});
+//idk how but auto fill did this 
+/* DRAW SCORE */
+gi.addDrawing(function drawScore({ ctx }) {
+  ctx.fillStyle = "white";
+  ctx.font = "20px Arial";
+  ctx.fillText("Score: " + score, 10, 30);
 });
 
 /* Input Handlers */
