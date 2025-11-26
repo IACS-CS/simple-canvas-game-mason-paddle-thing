@@ -122,7 +122,7 @@ gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
     objectspeed += 7.5; // increase speed for difficulty
   }
 
-  // If ball falls off screen → game over
+  // If ball falls off screen its game over
   //AI told me gi.diioalog is a thing and to use location.reload to restart
   if (objecty > height) {
     gi.stop();
