@@ -104,12 +104,17 @@ gi.addDrawing(function drawobject({ ctx, width, height, elapsed, stepTime }) {
   // Update object falling
   objecty += objectspeed * (stepTime / 1000);
   objectspeed += 10 * (stepTime / 1000);
-  //AI helped me with this part as well
+  //AI did this for me I started doing work and asked it what to do and it said this was better so I just went with it.
   // Collision Detection
+  // Check if the ball is overlapping with the paddle by testing all four sides
   let hitPaddle =
+    // Check if ball's bottom edge has reached or passed paddle's top edge
     objecty + objectradius >= Paddley &&
+    // Check if ball's top edge hasn't gone past paddle's bottom edge
     objecty - objectradius <= Paddley + paddleheight &&
+    // Check if ball's x position is at or past paddle's left edge
     objectx >= paddlex &&
+    // Check if ball's x position is at or before paddle's right edge (all conditions must be true)
     objectx <= paddlex + paddlewidth;
 
   if (hitPaddle) {
@@ -158,6 +163,8 @@ gi.addHandler("click", function ({ event, x, y }) {
   }
 });
 //got help from teacher on this part as well
+gi.getContainer().querySelector("canvas").tabIndex = 1000; // make canvas focusable
+gi.getContainer().querySelector("canvas").focus(); // focus canvas to receive key events
 gi.addHandler("keydown", function ({ event }) {
   if (event.key === "ArrowLeft") {
     // move left
